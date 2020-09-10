@@ -255,12 +255,18 @@ Public Class Form1
 
     Private Sub Label6_Click(sender As Object, e As EventArgs) Handles Label6.Click
         If TextBox6.Text Is Nothing Then Exit Sub
-        Shell("explorer " & TextBox6.Text)
+        Try
+            Shell("explorer " & TextBox6.Text)
+        Finally
+        End Try
     End Sub
 
     Private Sub Label5_Click(sender As Object, e As EventArgs) Handles Label5.Click
         If TextBox5.Text Is Nothing Then Exit Sub
-        Shell(TextBox5.Text)
+        Try
+            Shell("explorer " & TextBox5.Text)
+        Finally
+        End Try
     End Sub
 
     Private Sub Dlupdate()
