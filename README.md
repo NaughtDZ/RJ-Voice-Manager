@@ -14,4 +14,4 @@ RJ号必须能从Dlsite上找到（其实是忘了写判断了）
 
 未来不一定会更新，GPL3嘛，各路大佬欢迎强化这个项目
 
-教程视频：制作中
+介绍视频：https://www.bilibili.com/video/BV1x5411b7PF
