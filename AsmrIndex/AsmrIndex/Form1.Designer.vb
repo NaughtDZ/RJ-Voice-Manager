@@ -26,7 +26,6 @@ Partial Class Form1
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.Button2 = New System.Windows.Forms.Button()
-        Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
@@ -56,16 +55,19 @@ Partial Class Form1
         Me.ButtonDL = New System.Windows.Forms.Button()
         Me.TextBoxName = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
+        Me.DirListBox1 = New Microsoft.VisualBasic.Compatibility.VB6.DirListBox()
+        Me.ListBox1 = New System.Windows.Forms.ListBox()
+        Me.DriveListBox1 = New Microsoft.VisualBasic.Compatibility.VB6.DriveListBox()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(12, 12)
+        Me.Button1.Location = New System.Drawing.Point(338, 12)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(110, 40)
+        Me.Button1.Size = New System.Drawing.Size(99, 40)
         Me.Button1.TabIndex = 1
-        Me.Button1.Text = "选择音声总目录"
+        Me.Button1.Text = "导入批量音声进数据库"
         Me.Button1.UseVisualStyleBackColor = True
         '
         'OpenFileDialog1
@@ -81,30 +83,20 @@ Partial Class Form1
         Me.Button2.Text = "初次使用？"
         Me.Button2.UseVisualStyleBackColor = True
         '
-        'ListBox1
-        '
-        Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.HorizontalScrollbar = True
-        Me.ListBox1.ItemHeight = 12
-        Me.ListBox1.Location = New System.Drawing.Point(12, 93)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(110, 364)
-        Me.ListBox1.TabIndex = 3
-        '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(12, 486)
+        Me.Button3.Location = New System.Drawing.Point(338, 459)
         Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(110, 40)
+        Me.Button3.Size = New System.Drawing.Size(97, 23)
         Me.Button3.TabIndex = 4
         Me.Button3.Text = "从数据库刷新"
         Me.Button3.UseVisualStyleBackColor = True
         '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(155, 12)
+        Me.Button4.Location = New System.Drawing.Point(338, 494)
         Me.Button4.Name = "Button4"
-        Me.Button4.Size = New System.Drawing.Size(110, 40)
+        Me.Button4.Size = New System.Drawing.Size(97, 23)
         Me.Button4.TabIndex = 5
         Me.Button4.Text = "清空数据库"
         Me.Button4.UseVisualStyleBackColor = True
@@ -242,9 +234,9 @@ Partial Class Form1
         '
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Items.AddRange(New Object() {"RJ号", "声优", "贩售日期", "社团", "名字"})
-        Me.ComboBox1.Location = New System.Drawing.Point(200, 94)
+        Me.ComboBox1.Location = New System.Drawing.Point(338, 67)
         Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(97, 20)
+        Me.ComboBox1.Size = New System.Drawing.Size(99, 20)
         Me.ComboBox1.TabIndex = 13
         '
         'TextBox7
@@ -256,7 +248,7 @@ Partial Class Form1
         '
         'Button7
         '
-        Me.Button7.Location = New System.Drawing.Point(274, 131)
+        Me.Button7.Location = New System.Drawing.Point(346, 124)
         Me.Button7.Name = "Button7"
         Me.Button7.Size = New System.Drawing.Size(80, 23)
         Me.Button7.TabIndex = 15
@@ -275,7 +267,7 @@ Partial Class Form1
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(153, 97)
+        Me.Label8.Location = New System.Drawing.Point(303, 70)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(29, 12)
         Me.Label8.TabIndex = 17
@@ -285,14 +277,14 @@ Partial Class Form1
         '
         Me.ListBox2.FormattingEnabled = True
         Me.ListBox2.ItemHeight = 12
-        Me.ListBox2.Location = New System.Drawing.Point(151, 164)
+        Me.ListBox2.Location = New System.Drawing.Point(338, 164)
         Me.ListBox2.Name = "ListBox2"
-        Me.ListBox2.Size = New System.Drawing.Size(284, 292)
+        Me.ListBox2.Size = New System.Drawing.Size(97, 292)
         Me.ListBox2.TabIndex = 18
         '
         'Button8
         '
-        Me.Button8.Location = New System.Drawing.Point(365, 482)
+        Me.Button8.Location = New System.Drawing.Point(12, 513)
         Me.Button8.Name = "Button8"
         Me.Button8.Size = New System.Drawing.Size(72, 35)
         Me.Button8.TabIndex = 19
@@ -344,11 +336,40 @@ Partial Class Form1
         Me.Label9.TabIndex = 10
         Me.Label9.Text = "名字"
         '
+        'DirListBox1
+        '
+        Me.DirListBox1.FormattingEnabled = True
+        Me.DirListBox1.IntegralHeight = False
+        Me.DirListBox1.Location = New System.Drawing.Point(12, 40)
+        Me.DirListBox1.Name = "DirListBox1"
+        Me.DirListBox1.Size = New System.Drawing.Size(156, 461)
+        Me.DirListBox1.TabIndex = 23
+        '
+        'ListBox1
+        '
+        Me.ListBox1.FormattingEnabled = True
+        Me.ListBox1.HorizontalScrollbar = True
+        Me.ListBox1.ItemHeight = 12
+        Me.ListBox1.Location = New System.Drawing.Point(184, 42)
+        Me.ListBox1.Name = "ListBox1"
+        Me.ListBox1.Size = New System.Drawing.Size(110, 460)
+        Me.ListBox1.TabIndex = 3
+        '
+        'DriveListBox1
+        '
+        Me.DriveListBox1.FormattingEnabled = True
+        Me.DriveListBox1.Location = New System.Drawing.Point(12, 12)
+        Me.DriveListBox1.Name = "DriveListBox1"
+        Me.DriveListBox1.Size = New System.Drawing.Size(282, 22)
+        Me.DriveListBox1.TabIndex = 24
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(745, 548)
+        Me.Controls.Add(Me.DriveListBox1)
+        Me.Controls.Add(Me.DirListBox1)
         Me.Controls.Add(Me.ButtonDL)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.WebBrowser1)
@@ -392,7 +413,6 @@ Partial Class Form1
     Friend WithEvents OpenFileDialog1 As OpenFileDialog
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
     Friend WithEvents Button2 As Button
-    Friend WithEvents ListBox1 As ListBox
     Friend WithEvents Button3 As Button
     Friend WithEvents Button4 As Button
     Friend WithEvents PictureBox1 As PictureBox
@@ -422,4 +442,7 @@ Partial Class Form1
     Friend WithEvents ButtonDL As Button
     Friend WithEvents TextBoxName As TextBox
     Friend WithEvents Label9 As Label
+    Friend WithEvents DirListBox1 As Compatibility.VB6.DirListBox
+    Friend WithEvents ListBox1 As ListBox
+    Friend WithEvents DriveListBox1 As Compatibility.VB6.DriveListBox
 End Class

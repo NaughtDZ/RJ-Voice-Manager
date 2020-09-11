@@ -22,15 +22,15 @@ Public Class Form1
         GAF_thread.Start(FolderDialog.SelectedPath)
     End Sub
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        MsgBox("请保证音声打包在压缩文件包或者放在RJ目录里" & vbCrLf & "请保证压缩包或文件夹为纯 RJ000000 这类形式", , "注意事项")
+        MsgBox("请保证音声打包在压缩文件包或者放在RJ目录里" & vbCrLf & "请保证压缩包或文件夹为纯 RJ000000 这类形式" & vbCrLf & "批量请用批量按钮，通过树形管理获得的音声，如数据库没有，请手动点击添加按钮", , "注意事项")
     End Sub
     Private Sub GetAllFiles(ByVal strDirect As String)  '搜索所有目录下的文件
-        ListBox1.CheckForIllegalCrossThreadCalls = False
+        ListBox2.CheckForIllegalCrossThreadCalls = False
         If Not (strDirect Is Nothing) Then
             Dim mFileInfo As IO.FileInfo '文件与文件夹的IO定义
             Dim mDir As IO.DirectoryInfo
             Dim mDirInfo As New IO.DirectoryInfo(strDirect)
-            Dim Rjsplit(2) As String
+            Dim Rjsplit(16) As String '不排除有憨憨的文件名里有好多.,尽管我说了命名为RJxxxx
             Try
                 For Each mFileInfo In mDirInfo.GetFiles '获取文件路径
                     'Debug.Print(mFileInfo.FullName)
@@ -113,13 +113,24 @@ Public Class Form1
     End Sub
 
     Private Sub ListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox1.SelectedIndexChanged
-        Try
-            Rjdetailread(ListBox1.SelectedItem.ToString)
-            If CheckBox1.Checked = True Then ButtonDL_Click(Nothing, Nothing)
-        Catch ex As Exception
-            MsgBox("别点那么快啊")
-        End Try
-
+        ListBox1.CheckForIllegalCrossThreadCalls = False
+        If Duplicatedetect(ListBox1.SelectedItem.ToString) = True Then
+            Try
+                Rjdetailread(ListBox1.SelectedItem.ToString)
+                If CheckBox1.Checked = True Then ButtonDL_Click(Nothing, Nothing)
+            Catch ex As Exception
+                MsgBox("别点那么快啊")
+            End Try
+        Else
+            TextBox1.Text = ListBox1.SelectedItem.ToString
+            TextBox6.Text = DirListBox1.Path & "\" & DirListBox1.SelectedItem & "\" & ListBox1.SelectedItem
+            PictureBox1.ImageLocation = ""
+            TextBoxName.Text = ""
+            TextBox2.Text = ""
+            TextBox3.Text = ""
+            TextBox4.Text = ""
+            TextBox5.Text = ""
+        End If
     End Sub
     Private Sub Rjdetailread(rjchose As String) '读listbox1或2选中的RJ
         TextBox1.Text = rjchose
@@ -210,8 +221,12 @@ Public Class Form1
     End Sub
 
     Private Sub ListBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox2.SelectedIndexChanged
-        Rjdetailread(ListBox2.SelectedItem.ToString)
-        If CheckBox1.Checked = True Then ButtonDL_Click(Nothing, Nothing)
+        Try
+            Rjdetailread(ListBox2.SelectedItem.ToString)
+            If CheckBox1.Checked = True Then ButtonDL_Click(Nothing, Nothing)
+        Catch ex As Exception
+            MsgBox("别点那么快啊")
+        End Try
     End Sub
 
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
@@ -224,10 +239,10 @@ Public Class Form1
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click '刷新，读取
-        ListBox1.Items.Clear()
+        ListBox2.Items.Clear()
         Dbreader("Rj", "*")
         While readlist.Read()
-            ListBox1.Items.Add(readlist(0).ToString)
+            ListBox2.Items.Add(readlist(0).ToString)
         End While
     End Sub
 
@@ -235,6 +250,7 @@ Public Class Form1
         If TextBox1.Text = "" Then Exit Sub
         isok = False
         WebBrowser1.ScriptErrorsSuppressed = True '禁止显示网页脚本错误
+        ButtonDL.Enabled = False
         WebBrowser1.Navigate("https://www.dlsite.com/maniax/work/=/product_id/" & TextBox1.Text & ".html")
         '------注意！------以下为错误
         'Do
@@ -267,6 +283,30 @@ Public Class Form1
             Shell("explorer " & TextBox5.Text)
         Finally
         End Try
+    End Sub
+
+    Private Sub DriveListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DriveListBox1.SelectedIndexChanged
+        DirListBox1.Path = DriveListBox1.Drive
+    End Sub
+
+    Private Sub DirListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DirListBox1.SelectedIndexChanged
+        ListBox1.Items.Clear()
+        If Not (DirListBox1.Path Is Nothing) Then
+            Try
+                Dim mFileInfo As System.IO.FileInfo
+                Dim mDirInfo As New System.IO.DirectoryInfo(DirListBox1.Path & "\" & DirListBox1.SelectedItem)
+                Dim Rjsplit(16) As String
+                For Each mFileInfo In mDirInfo.GetFiles()
+                    'Debug.Print(mFileInfo.FullName)
+                    If Strings.Left(mFileInfo.Name, 2) = "RJ" Then
+                        Rjsplit = Strings.Split(mFileInfo.Name, ".")
+                        ListBox1.Items.Add(Rjsplit(0))
+                    End If
+                Next
+            Catch ex As Exception
+                Debug.Print("目录没找到：" + ex.Message)
+            End Try
+        End If
     End Sub
 
     Private Sub Dlupdate()
@@ -311,6 +351,7 @@ Public Class Form1
         PictureBox1.ImageLocation = TextBox5.Text
         '------------
         Button5_Click(Nothing, Nothing)
+        ButtonDL.Enabled = True
         Beep()
     End Sub
 End Class
