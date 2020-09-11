@@ -22,6 +22,7 @@ Partial Class Form1
     '不要使用代码编辑器修改它。
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
@@ -50,14 +51,15 @@ Partial Class Form1
         Me.Label8 = New System.Windows.Forms.Label()
         Me.ListBox2 = New System.Windows.Forms.ListBox()
         Me.Button8 = New System.Windows.Forms.Button()
+        Me.TextBoxName = New System.Windows.Forms.TextBox()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.WebBrowser1 = New System.Windows.Forms.WebBrowser()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.ButtonDL = New System.Windows.Forms.Button()
-        Me.TextBoxName = New System.Windows.Forms.TextBox()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.DirListBox1 = New Microsoft.VisualBasic.Compatibility.VB6.DirListBox()
-        Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.DriveListBox1 = New Microsoft.VisualBasic.Compatibility.VB6.DriveListBox()
+        Me.TreeView1 = New System.Windows.Forms.TreeView()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -291,6 +293,32 @@ Partial Class Form1
         Me.Button8.Text = "无法连接DLsite?"
         Me.Button8.UseVisualStyleBackColor = True
         '
+        'TextBoxName
+        '
+        Me.TextBoxName.Location = New System.Drawing.Point(550, 305)
+        Me.TextBoxName.Name = "TextBoxName"
+        Me.TextBoxName.Size = New System.Drawing.Size(183, 21)
+        Me.TextBoxName.TabIndex = 9
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(441, 308)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(29, 12)
+        Me.Label9.TabIndex = 10
+        Me.Label9.Text = "名字"
+        '
+        'ListBox1
+        '
+        Me.ListBox1.FormattingEnabled = True
+        Me.ListBox1.HorizontalScrollbar = True
+        Me.ListBox1.ItemHeight = 12
+        Me.ListBox1.Location = New System.Drawing.Point(184, 42)
+        Me.ListBox1.Name = "ListBox1"
+        Me.ListBox1.Size = New System.Drawing.Size(110, 460)
+        Me.ListBox1.TabIndex = 3
+        '
         'WebBrowser1
         '
         Me.WebBrowser1.Location = New System.Drawing.Point(144, 507)
@@ -320,41 +348,6 @@ Partial Class Form1
         Me.ButtonDL.Text = "从Dlsite上加载"
         Me.ButtonDL.UseVisualStyleBackColor = True
         '
-        'TextBoxName
-        '
-        Me.TextBoxName.Location = New System.Drawing.Point(550, 305)
-        Me.TextBoxName.Name = "TextBoxName"
-        Me.TextBoxName.Size = New System.Drawing.Size(183, 21)
-        Me.TextBoxName.TabIndex = 9
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(441, 308)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(29, 12)
-        Me.Label9.TabIndex = 10
-        Me.Label9.Text = "名字"
-        '
-        'DirListBox1
-        '
-        Me.DirListBox1.FormattingEnabled = True
-        Me.DirListBox1.IntegralHeight = False
-        Me.DirListBox1.Location = New System.Drawing.Point(12, 40)
-        Me.DirListBox1.Name = "DirListBox1"
-        Me.DirListBox1.Size = New System.Drawing.Size(156, 461)
-        Me.DirListBox1.TabIndex = 23
-        '
-        'ListBox1
-        '
-        Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.HorizontalScrollbar = True
-        Me.ListBox1.ItemHeight = 12
-        Me.ListBox1.Location = New System.Drawing.Point(184, 42)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(110, 460)
-        Me.ListBox1.TabIndex = 3
-        '
         'DriveListBox1
         '
         Me.DriveListBox1.FormattingEnabled = True
@@ -363,13 +356,24 @@ Partial Class Form1
         Me.DriveListBox1.Size = New System.Drawing.Size(282, 22)
         Me.DriveListBox1.TabIndex = 24
         '
+        'TreeView1
+        '
+        Me.TreeView1.Location = New System.Drawing.Point(12, 42)
+        Me.TreeView1.Name = "TreeView1"
+        Me.TreeView1.Size = New System.Drawing.Size(166, 460)
+        Me.TreeView1.TabIndex = 25
+        '
+        'Timer1
+        '
+        Me.Timer1.Interval = 15000
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(745, 548)
+        Me.Controls.Add(Me.TreeView1)
         Me.Controls.Add(Me.DriveListBox1)
-        Me.Controls.Add(Me.DirListBox1)
         Me.Controls.Add(Me.ButtonDL)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.WebBrowser1)
@@ -437,12 +441,13 @@ Partial Class Form1
     Friend WithEvents Label8 As Label
     Friend WithEvents ListBox2 As ListBox
     Friend WithEvents Button8 As Button
+    Friend WithEvents TextBoxName As TextBox
+    Friend WithEvents Label9 As Label
+    Friend WithEvents ListBox1 As ListBox
     Friend WithEvents WebBrowser1 As WebBrowser
     Friend WithEvents CheckBox1 As CheckBox
     Friend WithEvents ButtonDL As Button
-    Friend WithEvents TextBoxName As TextBox
-    Friend WithEvents Label9 As Label
-    Friend WithEvents DirListBox1 As Compatibility.VB6.DirListBox
-    Friend WithEvents ListBox1 As ListBox
     Friend WithEvents DriveListBox1 As Compatibility.VB6.DriveListBox
+    Friend WithEvents TreeView1 As TreeView
+    Friend WithEvents Timer1 As Timer
 End Class
