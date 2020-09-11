@@ -1,6 +1,6 @@
 # RJ-Voice-Manager
 
-请直接克隆为zip，运行快捷方式就行，如果你用了安装exe，请记得自行在程序根目录下创建cover文件夹
+请直接克隆为zip，程序在RJ-Voice-Manager/AsmrIndex/AsmrIndex/bin/x86/Debug中，目录下创建cover文件夹(如果没有)
 
 管理你的本地RJ同人音声
 
