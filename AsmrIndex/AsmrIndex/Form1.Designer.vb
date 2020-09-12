@@ -60,7 +60,14 @@ Partial Class Form1
         Me.DriveListBox1 = New Microsoft.VisualBasic.Compatibility.VB6.DriveListBox()
         Me.TreeView1 = New System.Windows.Forms.TreeView()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.RadioButton_Shetuan = New System.Windows.Forms.RadioButton()
+        Me.RadioButton_SellDate = New System.Windows.Forms.RadioButton()
+        Me.RadioButton_Shengyou = New System.Windows.Forms.RadioButton()
+        Me.RadioButton_FromLocal = New System.Windows.Forms.RadioButton()
+        Me.TreeView2 = New System.Windows.Forms.TreeView()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Button1
@@ -286,9 +293,9 @@ Partial Class Form1
         '
         'Button8
         '
-        Me.Button8.Location = New System.Drawing.Point(12, 513)
+        Me.Button8.Location = New System.Drawing.Point(500, 12)
         Me.Button8.Name = "Button8"
-        Me.Button8.Size = New System.Drawing.Size(72, 35)
+        Me.Button8.Size = New System.Drawing.Size(117, 40)
         Me.Button8.TabIndex = 19
         Me.Button8.Text = "无法连接DLsite?"
         Me.Button8.UseVisualStyleBackColor = True
@@ -316,12 +323,12 @@ Partial Class Form1
         Me.ListBox1.ItemHeight = 12
         Me.ListBox1.Location = New System.Drawing.Point(184, 42)
         Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(110, 460)
+        Me.ListBox1.Size = New System.Drawing.Size(110, 448)
         Me.ListBox1.TabIndex = 3
         '
         'WebBrowser1
         '
-        Me.WebBrowser1.Location = New System.Drawing.Point(144, 507)
+        Me.WebBrowser1.Location = New System.Drawing.Point(443, 12)
         Me.WebBrowser1.MinimumSize = New System.Drawing.Size(20, 20)
         Me.WebBrowser1.Name = "WebBrowser1"
         Me.WebBrowser1.Size = New System.Drawing.Size(38, 32)
@@ -331,7 +338,7 @@ Partial Class Form1
         'CheckBox1
         '
         Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(443, 523)
+        Me.CheckBox1.Location = New System.Drawing.Point(443, 520)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(84, 16)
         Me.CheckBox1.TabIndex = 21
@@ -360,18 +367,86 @@ Partial Class Form1
         '
         Me.TreeView1.Location = New System.Drawing.Point(12, 42)
         Me.TreeView1.Name = "TreeView1"
-        Me.TreeView1.Size = New System.Drawing.Size(166, 460)
+        Me.TreeView1.Size = New System.Drawing.Size(166, 448)
         Me.TreeView1.TabIndex = 25
         '
         'Timer1
         '
         Me.Timer1.Interval = 15000
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.RadioButton_Shetuan)
+        Me.GroupBox1.Controls.Add(Me.RadioButton_SellDate)
+        Me.GroupBox1.Controls.Add(Me.RadioButton_Shengyou)
+        Me.GroupBox1.Controls.Add(Me.RadioButton_FromLocal)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 501)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(242, 35)
+        Me.GroupBox1.TabIndex = 26
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "浏览来源"
+        '
+        'RadioButton_Shetuan
+        '
+        Me.RadioButton_Shetuan.AutoSize = True
+        Me.RadioButton_Shetuan.Location = New System.Drawing.Point(189, 13)
+        Me.RadioButton_Shetuan.Name = "RadioButton_Shetuan"
+        Me.RadioButton_Shetuan.Size = New System.Drawing.Size(47, 16)
+        Me.RadioButton_Shetuan.TabIndex = 3
+        Me.RadioButton_Shetuan.TabStop = True
+        Me.RadioButton_Shetuan.Text = "社团"
+        Me.RadioButton_Shetuan.UseVisualStyleBackColor = True
+        '
+        'RadioButton_SellDate
+        '
+        Me.RadioButton_SellDate.AutoSize = True
+        Me.RadioButton_SellDate.Location = New System.Drawing.Point(112, 13)
+        Me.RadioButton_SellDate.Name = "RadioButton_SellDate"
+        Me.RadioButton_SellDate.Size = New System.Drawing.Size(71, 16)
+        Me.RadioButton_SellDate.TabIndex = 2
+        Me.RadioButton_SellDate.TabStop = True
+        Me.RadioButton_SellDate.Text = "贩售日期"
+        Me.RadioButton_SellDate.UseVisualStyleBackColor = True
+        '
+        'RadioButton_Shengyou
+        '
+        Me.RadioButton_Shengyou.AutoSize = True
+        Me.RadioButton_Shengyou.Location = New System.Drawing.Point(59, 13)
+        Me.RadioButton_Shengyou.Name = "RadioButton_Shengyou"
+        Me.RadioButton_Shengyou.Size = New System.Drawing.Size(47, 16)
+        Me.RadioButton_Shengyou.TabIndex = 1
+        Me.RadioButton_Shengyou.TabStop = True
+        Me.RadioButton_Shengyou.Text = "声优"
+        Me.RadioButton_Shengyou.UseVisualStyleBackColor = True
+        '
+        'RadioButton_FromLocal
+        '
+        Me.RadioButton_FromLocal.AutoSize = True
+        Me.RadioButton_FromLocal.Checked = True
+        Me.RadioButton_FromLocal.Location = New System.Drawing.Point(6, 13)
+        Me.RadioButton_FromLocal.Name = "RadioButton_FromLocal"
+        Me.RadioButton_FromLocal.Size = New System.Drawing.Size(47, 16)
+        Me.RadioButton_FromLocal.TabIndex = 0
+        Me.RadioButton_FromLocal.TabStop = True
+        Me.RadioButton_FromLocal.Text = "本地"
+        Me.RadioButton_FromLocal.UseVisualStyleBackColor = True
+        '
+        'TreeView2
+        '
+        Me.TreeView2.Location = New System.Drawing.Point(12, 42)
+        Me.TreeView2.Name = "TreeView2"
+        Me.TreeView2.Size = New System.Drawing.Size(154, 426)
+        Me.TreeView2.TabIndex = 27
+        Me.TreeView2.Visible = False
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(745, 548)
+        Me.Controls.Add(Me.TreeView2)
+        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.TreeView1)
         Me.Controls.Add(Me.DriveListBox1)
         Me.Controls.Add(Me.ButtonDL)
@@ -409,6 +484,8 @@ Partial Class Form1
         Me.Name = "Form1"
         Me.Text = "RJ音声管理器"
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -450,4 +527,10 @@ Partial Class Form1
     Friend WithEvents DriveListBox1 As Compatibility.VB6.DriveListBox
     Friend WithEvents TreeView1 As TreeView
     Friend WithEvents Timer1 As Timer
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents RadioButton_Shetuan As RadioButton
+    Friend WithEvents RadioButton_SellDate As RadioButton
+    Friend WithEvents RadioButton_Shengyou As RadioButton
+    Friend WithEvents RadioButton_FromLocal As RadioButton
+    Friend WithEvents TreeView2 As TreeView
 End Class
