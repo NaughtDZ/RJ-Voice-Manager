@@ -410,8 +410,9 @@ Public Class Form1
         Dim downloadCompleted As Threading.Thread = New Threading.Thread(AddressOf Dwcompleted)
         downloadCompleted.Start()
     End Sub
-
-    Private Sub Dwcompleted() '下载完成事件
+'webclient的下载完成事件并不可靠，picturbox只要有文件就能读，根本不管是否下载完，io里的文件是否存在判断也不可靠，因为webclient是先创建一个空的.jpg再下载，只能自己写
+'写成独立线程引用下载完成，因为这不是个Handle,只能靠额外线程等待，毕竟下载会很快，不会吃太多资源的，这次更新忘记考虑到了等待超时的问题，这个下个版本会修复的                                                                                                               
+    Private Sub Dwcompleted() '下载完成事件,
         WebBrowser1.Stop()
         Do
             PictureBox1.ImageLocation = TextBox5.Text
