@@ -22,7 +22,6 @@ Partial Class Form1
     '不要使用代码编辑器修改它。
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
@@ -59,7 +58,6 @@ Partial Class Form1
         Me.ButtonDL = New System.Windows.Forms.Button()
         Me.DriveListBox1 = New Microsoft.VisualBasic.Compatibility.VB6.DriveListBox()
         Me.TreeView1 = New System.Windows.Forms.TreeView()
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.RadioButton_Shetuan = New System.Windows.Forms.RadioButton()
         Me.RadioButton_SellDate = New System.Windows.Forms.RadioButton()
@@ -370,10 +368,6 @@ Partial Class Form1
         Me.TreeView1.Size = New System.Drawing.Size(166, 448)
         Me.TreeView1.TabIndex = 25
         '
-        'Timer1
-        '
-        Me.Timer1.Interval = 15000
-        '
         'GroupBox1
         '
         Me.GroupBox1.Controls.Add(Me.RadioButton_Shetuan)
@@ -526,7 +520,6 @@ Partial Class Form1
     Friend WithEvents ButtonDL As Button
     Friend WithEvents DriveListBox1 As Compatibility.VB6.DriveListBox
     Friend WithEvents TreeView1 As TreeView
-    Friend WithEvents Timer1 As Timer
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents RadioButton_Shetuan As RadioButton
     Friend WithEvents RadioButton_SellDate As RadioButton

@@ -5,7 +5,6 @@ Imports System.IO
 Public Class Form1
     Public Conn As OleDb.OleDbConnection = New OleDb.OleDbConnection '添加一个新的数据库连接器
     Public pgpath As String '数据库路径，全局
-    Public isok As Boolean = True '浏览器状态
     Private Sub Dbconect()
         pgpath = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & Chr(34) & Application.StartupPath & "\detailsDB.mdb" & Chr(34)
         'MsgBox(pgpath) 'debug 数据库路径
@@ -262,10 +261,8 @@ Public Class Form1
     Private Sub ButtonDL_Click(sender As Object, e As EventArgs) Handles ButtonDL.Click
         If TextBox1.Text = "" Then Exit Sub
         ButtonDL.Enabled = False
-        Pcdwn.CancelAsync()
         WebBrowser1.ScriptErrorsSuppressed = True '禁止显示网页脚本错误
         WebBrowser1.Stop()
-        Timer1.Enabled = True
         WebBrowser1.Navigate("https://www.dlsite.com/maniax/work/=/product_id/" & TextBox1.Text & ".html")
         '------注意！------以下为错误
         'Do
@@ -277,7 +274,6 @@ Public Class Form1
 
     Public wDoc As String '缓存浏览器读到的内容，以便释放浏览器
     Private Sub WebBrowser1_DocumentCompleted(sender As Object, e As WebBrowserDocumentCompletedEventArgs) Handles WebBrowser1.DocumentCompleted
-        If isok = False Then Return
         If WebBrowser1.ReadyState < WebBrowserReadyState.Complete OrElse WebBrowser1.Url.ToString() = LastUrl Then Return
         LastUrl = WebBrowser1.Url.ToString()
         '以上代码可以确保你不会在未加载完毕时执行操作，
@@ -286,7 +282,6 @@ Public Class Form1
         '其次按照“完全加载完毕后”来理解， 会认为通常一次页面跳转只会引发一次该事件， 事实也并非如此， 某些页面加载时会引发十多次乃至更多。
         If InStr(WebBrowser1.Document.Body.InnerHtml, "itemprop=" & Chr(34) & "url" & Chr(34) & ">") + 15 > 30 Then '这里是网页已经加载正确了
             WebBrowser1.Stop()
-            isok = False
             wDoc = WebBrowser1.Document.Body.InnerHtml '若无法找到任何信息，而确定RJ没错误，且proxy可上网，那么应该是打开的默认网页语言不是日文版，请提交issue，我会考虑做多语言适配
             Dlupdate()
         End If
@@ -364,7 +359,6 @@ Public Class Form1
         Next
     End Sub
 
-    Public Pcdwn As Net.WebClient = New Net.WebClient '定义一个web连接，别问我为啥不用pictruebox直接下图，pic似乎不能走我这里的http代理连接 这里是异步的，会导致点快了下载的图片是一样的，求解决方法
     Private Sub Dlupdate()
         WebBrowser1.Stop()
         Dim temptext As String
@@ -408,20 +402,26 @@ Public Class Form1
         temptext = Strings.Left(wDoc, Ysnameend)
         Ysnamestart = InStrRev(temptext, "img.dlsite.jp") '倒着找
         temptext = "https://" & Strings.Mid(temptext, Ysnamestart, Ysnameend) & "img_main.jpg"
+        Dim picuri As New Uri(temptext)
         TextBox5.Text = Application.StartupPath & "\cover\" & TextBox1.Text & ".jpg"
         '下载图片
-        Pcdwn.DownloadFile(temptext, "cover\" & TextBox1.Text & ".jpg")
-        Isdownload = True
-        PictureBox1.ImageLocation = TextBox5.Text
+        Dim Pcdwn As New Net.WebClient '定义一个web连接，别问我为啥不用pictruebox直接下图，pic似乎不能走我这里的http代理连接 这里是异步的，会导致点快了下载的图片是一样的，求解决方法
+        Pcdwn.DownloadFileAsync(picuri, "cover\" & TextBox1.Text & ".jpg")
+        Dim downloadCompleted As Threading.Thread = New Threading.Thread(AddressOf Dwcompleted)
+        downloadCompleted.Start()
     End Sub
 
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        Timer1.Enabled = False
-        MsgBox("15秒过去了，如果图还没下好" & vbCrLf & "请检查RJ号有无错误" & vbCrLf & “是否能连接到DLsite” & vbCrLf & “或者你15秒连个图都下不下来，这网速还是搞别同步了吧”)
+    Private Sub Dwcompleted() '下载完成事件
         WebBrowser1.Stop()
+        Do
+            PictureBox1.ImageLocation = TextBox5.Text
+            If PictureBox1.Image IsNot Nothing AndAlso PictureBox1.Image IsNot PictureBox1.ErrorImage Then Exit Do
+            Threading.Thread.Sleep(100)
+        Loop
+        Button5_Click(Nothing, Nothing)
         ButtonDL.Enabled = True
+        Beep()
     End Sub
-
 
     Private Sub TreeView1_AfterExpand(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterExpand
         ListBox1.Items.Clear()
@@ -449,7 +449,6 @@ Public Class Form1
             End If
         Next
     End Sub
-    Public Isdownload As Boolean = False '这次的图片加载是下载图片还是普通加载
 
     Private Sub RadioButton_FromLocal_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton_FromLocal.CheckedChanged
         If RadioButton_FromLocal.Checked = False Then '我知道读取按声优日期社团分类的列表用listbox就行，但是，万一以后你们又想来个什么按照声优的不同时期的作品排序这种扯淡东西，treeview2就有用了
@@ -465,7 +464,7 @@ Public Class Form1
         If RadioButton_Shengyou.Checked = True Then
             TreeView2.Nodes.Clear()
             Dbreader("Shengyou", "*")
-            Dim checkin As New Collection '注意 Collection 起点为 1 ！！！！！！
+            Dim checkin As New ObjectModel.Collection(Of String) '注意 Collection 起点为 1 ！！！！！！
             Dim alreayhave As Boolean = False
             While readlist.Read '读readlist的结果
                 checkin.Add(readlist(0))
@@ -550,18 +549,5 @@ Public Class Form1
         While readlist.Read
             ListBox2.Items.Add(readlist(0))
         End While
-    End Sub
-
-    Private Sub PictureBox1_LoadCompleted(sender As Object, e As AsyncCompletedEventArgs) Handles PictureBox1.LoadCompleted
-        If Isdownload = True Then
-            WebBrowser1.Stop()
-            Pcdwn.CancelAsync()
-            isok = True
-            Timer1.Enabled = False
-            Button5_Click(Nothing, Nothing)
-            ButtonDL.Enabled = True
-            Beep()
-        End If
-        Isdownload = False '稳定点
     End Sub
 End Class
