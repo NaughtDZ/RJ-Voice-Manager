@@ -1,5 +1,5 @@
 # RJ-Voice-Manager
-|[image](https://s1.ax1x.com/2020/09/12/wa2REV.png)
+![Alt image](https://s1.ax1x.com/2020/09/12/wa2REV.png)
 
 请直接克隆为zip，程序在RJ-Voice-Manager/AsmrIndex/AsmrIndex/bin/x86/Debug中，目录下创建cover文件夹(如果没有)
 
