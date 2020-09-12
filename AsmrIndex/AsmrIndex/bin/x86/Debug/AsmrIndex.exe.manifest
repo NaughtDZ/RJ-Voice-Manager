@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AsmrIndex.exe" size="48616">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AsmrIndex.exe" size="48104">
       <assemblyIdentity name="AsmrIndex" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>dKSGPnScdEDtPEY6hJ12PEh6e+O6gAUt1z3xX+h4L0s=</dsig:DigestValue>
+        <dsig:DigestValue>+YHF1m+1Rd/RNzTYUYrj9ud/UkDfL0dhO2XvaW40SBs=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
