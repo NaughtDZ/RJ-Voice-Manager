@@ -1,3 +1,8 @@
+## 更新预告(我先休息几天)
+下个版本将放宽文件夹与文件命名规则，名字可以"*Rj*" "*RJ*"
+添加由于RJ错误导致无法查询到的提示
+顺带提一句，不会有憨憨搞RJ名字成Rjxxxxx123456789这种吧
+***
 # RJ-Voice-Manager
 ![Alt image](https://s1.ax1x.com/2020/09/12/wa2REV.png)
 
@@ -18,3 +23,8 @@ RJ号必须能从Dlsite上找到（其实是忘了写判断了）
 未来不一定会更新，GPL3嘛，各路大佬欢迎强化这个项目
 
 介绍视频：https://www.bilibili.com/video/BV1x5411b7PF
+***
+### PS.
+我这个强调的是管理RJ音声和方便你找
+如果你需要功能更强大的音声管理，信息爬虫，乃至直接播放等待，其他Github里的大佬的某些项目可能是你更需要的
+举个例子：https://github.com/yodhcn/kikoeru-express
