@@ -1,6 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.IO
-
+Imports RegExp = System.Text.RegularExpressions
 
 Public Class Form1
     Public Conn As OleDb.OleDbConnection = New OleDb.OleDbConnection '添加一个新的数据库连接器
@@ -24,7 +24,7 @@ Public Class Form1
         GAF_thread.Start(FolderDialog.SelectedPath)
     End Sub
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        MsgBox("请保证音声打包在压缩文件包或者放在RJ目录里" & vbCrLf & "请保证压缩包或文件夹为纯 RJ000000 这类形式" & vbCrLf & "批量请用批量按钮，通过树形管理获得的音声，如数据库没有，请手动点击添加按钮", , "注意事项")
+        MsgBox("请保证音声打包在压缩文件包或者放在RJ目录里" & vbCrLf & "请保证压缩包或文件夹含有RJ号且不在分区根目录" & vbCrLf & "批量请用批量按钮，通过树形管理获得的音声，如数据库没有，请手动点击添加按钮", , "注意事项")
     End Sub
 
     Private Sub GetAllFiles(ByVal strDirect As String)  '搜索所有目录下的文件
@@ -33,23 +33,22 @@ Public Class Form1
             Dim mFileInfo As IO.FileInfo '文件与文件夹的IO定义
             Dim mDir As IO.DirectoryInfo
             Dim mDirInfo As New IO.DirectoryInfo(strDirect)
-            Dim Rjsplit(16) As String '不排除有憨憨的文件名里有好多.,尽管我说了命名为RJxxxx
+            Dim rjReg As RegExp.Regex = New RegExp.Regex(pattern:="Rj[\d]+", options:=RegExp.RegexOptions.IgnoreCase) 'Rj号正则表达式，可提取xxRj00000xx,xx rj000 xx,等无视RJ号前后空格和rj大小写，而且，不会有人文件名为xxxRJ0000+其他数字吧
+            Dim RJName As String
             Try
                 For Each mFileInfo In mDirInfo.GetFiles '获取文件路径
-                    'Debug.Print(mFileInfo.FullName)
-                    If Strings.Left(mFileInfo.Name, 2) = "RJ" Then
-                        Rjsplit = Strings.Split(mFileInfo.Name, ".")
-                        If Duplicatedetect(Rjsplit(0), "Rj") = False Then
-                            Dbinsert("Rj,Shengyou,Fanshou,Shetuan,Fengmian,Bendimulu,Mingzi", "'" & Rjsplit(0) & "','','','','','" & mFileInfo.FullName & "',''")
+                    If rjReg.IsMatch(input:=mFileInfo.Name) = True Then
+                        RJName = UCase(rjReg.Match(input:=mFileInfo.Name).Value) 'dl上的RJ网页链接里的RJ都是大写的
+                        If Duplicatedetect(RJName, "Rj") = False Then
+                            Dbinsert("Rj,Shengyou,Fanshou,Shetuan,Fengmian,Bendimulu,Mingzi", "'" & RJName & "','','','','','" & mFileInfo.FullName & "',''")
                         End If
                     End If
                 Next
                 For Each mDir In mDirInfo.GetDirectories '获取文件夹路径
-                    'Debug.Print("******目录回调*******")
-                    If Strings.Left(mDir.Name, 2) = "RJ" Then
-                        Rjsplit = Strings.Split(mDir.Name, ".")
-                        If Duplicatedetect(Rjsplit(0), "Rj") = False Then
-                            Dbinsert("Rj,Shengyou,Fanshou,Shetuan,Fengmian,Bendimulu,Mingzi", "'" & Rjsplit(0) & "','','','','','" & mDir.FullName & "',''")
+                    If rjReg.IsMatch(input:=mDir.Name) = True Then
+                        RJName = UCase(rjReg.Match(input:=mDir.Name).Value)
+                        If Duplicatedetect(RJName, "Rj") = False Then
+                            Dbinsert("Rj,Shengyou,Fanshou,Shetuan,Fengmian,Bendimulu,Mingzi", "'" & RJName & "','','','','','" & mDir.FullName & "',''")
                         End If
                     End If
                 Next
@@ -120,31 +119,29 @@ Public Class Form1
     Private Sub ListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox1.SelectedIndexChanged
         ListBox1.CheckForIllegalCrossThreadCalls = False
         Dim selectNoDot As String        '去扩展名
-        If InStr(ListBox1.SelectedItem.ToString, ".") > 0 Then
-            selectNoDot = Strings.Left(ListBox1.SelectedItem.ToString, InStr(ListBox1.SelectedItem.ToString, ".") - 1)
-        Else
-            selectNoDot = ListBox1.SelectedItem.ToString
-        End If
-        If Duplicatedetect(selectNoDot, "Rj") = True Then
-            Try
+        Dim rjReg As RegExp.Regex = New RegExp.Regex(pattern:="Rj[\d]+", options:=RegExp.RegexOptions.IgnoreCase)
+        selectNoDot = UCase(rjReg.Match(ListBox1.SelectedItem.ToString).Value) '从listbox1里获得纯RJ号,是RJ ,必须大写!!!!!!
+        Try
+            If Duplicatedetect(selectNoDot, "Rj") = True Then
                 Rjdetailread(selectNoDot)
                 If CheckBox1.Checked = True Then ButtonDL_Click(Nothing, Nothing)
-            Catch ex As Exception
-                MsgBox("别点那么快啊")
-            End Try
-        Else
-            TextBox1.Text = selectNoDot
-            'MsgBox(TreeView1.SelectedNode.Name & "\" & ListBox1.SelectedItem.ToString)
-            TextBox6.Text = TreeView1.SelectedNode.Name & "\" & ListBox1.SelectedItem.ToString
-            PictureBox1.ImageLocation = ""
-            TextBoxName.Text = ""
-            TextBox2.Text = ""
-            TextBox3.Text = ""
-            TextBox4.Text = ""
-            TextBox5.Text = ""
-        End If
+            Else
+                TextBox1.Text = selectNoDot
+                'MsgBox(TreeView1.SelectedNode.Name & "\" & ListBox1.SelectedItem.ToString)
+                TextBox6.Text = TreeView1.SelectedNode.Name & "\" & ListBox1.SelectedItem.ToString
+                PictureBox1.ImageLocation = ""
+                TextBoxName.Text = ""
+                TextBox2.Text = ""
+                TextBox3.Text = ""
+                TextBox4.Text = ""
+                TextBox5.Text = ""
+            End If
+        Catch ex As Exception
+            MsgBox("别点那么快啊")
+        End Try
     End Sub
     Private Sub Rjdetailread(rjchose As String) '读listbox1或2选中的RJ
+        '----请检查你输入的是不是RJxxxx，按道理说我listbox1和2里select中调用这个方法之前已经转换了，如有BUG，请上报
         TextBox1.Text = rjchose
         Dbreader("Shengyou,Fanshou,Shetuan,Fengmian,Bendimulu,Mingzi", "Rj='" & rjchose & "'")
         readlist.ReadAsync()
@@ -325,7 +322,6 @@ Public Class Form1
             If (My.Computer.FileSystem.GetDirectoryInfo(dirname).Attributes And FileAttribute.Hidden) <> FileAttribute.Hidden Then '去掉隐藏文件夹，因为这类东西大多需要提升权限,前面那一坨是获得文件夹隐藏的状态
                 dirshow = My.Computer.FileSystem.GetName(dirname)
                 TreeView1.Nodes.Add(dirname, dirshow)
-                If Strings.Left(dirshow, 2) = "RJ" Then ListBox1.Items.Add(dirshow)
                 Dim SecDirInroot = My.Computer.FileSystem.GetDirectories(dirname)
                 For Each secdirname As String In SecDirInroot '套娃获取二级目录，主要是为了获得那个小加号
                     dirshow = My.Computer.FileSystem.GetName(secdirname)
@@ -340,12 +336,13 @@ Public Class Form1
         ListBox1.Items.Clear()
         Dim secrootnow As String
         Dim secrootDirColleection As Object, dirshow As String
+        Dim rjReg As RegExp.Regex = New RegExp.Regex(pattern:="Rj[\d]+", options:=RegExp.RegexOptions.IgnoreCase)
         secrootnow = e.Node.Name  'Name就是带路径的那个，text就显示出来不带路径的那个 
         secrootDirColleection = My.Computer.FileSystem.GetDirectories(secrootnow)
         For Each secrootdir As String In secrootDirColleection
             If (My.Computer.FileSystem.GetDirectoryInfo(secrootdir).Attributes And FileAttribute.Hidden) <> FileAttribute.Hidden Then '去掉隐藏文件夹，因为这类东西大多需要提升权限,前面那一坨是获得文件夹隐藏的状态
                 dirshow = My.Computer.FileSystem.GetName(secrootdir)
-                If Strings.Left(dirshow, 2) = "RJ" Then ListBox1.Items.Add(dirshow)
+                If rjReg.IsMatch(input:=dirshow) = True Then ListBox1.Items.Add(dirshow)
             End If
         Next
         '读该目录里的文件
@@ -353,7 +350,7 @@ Public Class Form1
         Dim filename As String
         For Each filepath In My.Computer.FileSystem.GetFiles(secrootnow)
             filename = My.Computer.FileSystem.GetName(filepath)
-            If Strings.Left(filename, 2) = "RJ" Then
+            If rjReg.IsMatch(input:=filename) = True Then
                 ListBox1.Items.Add(filename)
             End If
         Next
@@ -410,14 +407,16 @@ Public Class Form1
         Dim downloadCompleted As Threading.Thread = New Threading.Thread(AddressOf Dwcompleted)
         downloadCompleted.Start()
     End Sub
-'webclient的下载完成事件并不可靠，picturbox只要有文件就能读，根本不管是否下载完，io里的文件是否存在判断也不可靠，因为webclient是先创建一个空的.jpg再下载，只能自己写
-'写成独立线程引用下载完成，因为这不是个Handle,只能靠额外线程等待，毕竟下载会很快，不会吃太多资源的，这次更新忘记考虑到了等待超时的问题，这个下个版本会修复的                                                                                                               
-    Private Sub Dwcompleted() '下载完成事件,
+
+    Private Sub Dwcompleted() '下载完成事件
         WebBrowser1.Stop()
+        Dim timeout As Integer = 0
         Do
+            If timeout = 100 Then MsgBox("下载超时或图片加载失败") : Exit Do
             PictureBox1.ImageLocation = TextBox5.Text
             If PictureBox1.Image IsNot Nothing AndAlso PictureBox1.Image IsNot PictureBox1.ErrorImage Then Exit Do
             Threading.Thread.Sleep(100)
+            timeout += 1
         Loop
         Button5_Click(Nothing, Nothing)
         ButtonDL.Enabled = True
@@ -429,9 +428,10 @@ Public Class Form1
         Dim secrootnow As String
         Dim rootnowitemcount As Integer = e.Node.Nodes.Count, readcount As Integer
         Dim secrootDirColleection As Object, dirshow As String
-        For readcount = 0 To rootnowitemcount - 1 '没办法Node.Nodes似乎没有获得内部节点集合的方法,只能靠计数器历遍 读取的是每个文件夹！
+        Dim rjReg As RegExp.Regex = New RegExp.Regex(pattern:="Rj[\d]+", options:=RegExp.RegexOptions.IgnoreCase)
+        For readcount = 0 To rootnowitemcount - 1 '没办法Node.Nodes似乎没有获得内部节点集合的方法,只能靠计数器历遍 读取的是每个文件夹！或许tostring返回的能是字符串集合?
             secrootnow = e.Node.Nodes.Item(readcount).Name  'Name就是带路径的那个，text就显示出来不带路径的那个 
-            If Strings.Left(e.Node.Nodes.Item(readcount).Text, 2) = "RJ" Then ListBox1.Items.Add(e.Node.Nodes.Item(readcount).Text) '读取过程中判断文件夹是否为音声的归宿
+            If rjReg.IsMatch(input:=e.Node.Nodes.Item(readcount).Text) = True Then ListBox1.Items.Add(e.Node.Nodes.Item(readcount).Text) '读取过程中判断文件夹是否为音声的归宿
             secrootDirColleection = My.Computer.FileSystem.GetDirectories(secrootnow)
             For Each secrootdir As String In secrootDirColleection
                 If (My.Computer.FileSystem.GetDirectoryInfo(secrootdir).Attributes And FileAttribute.Hidden) <> FileAttribute.Hidden Then '去掉隐藏文件夹，因为这类东西大多需要提升权限,前面那一坨是获得文件夹隐藏的状态
@@ -445,8 +445,8 @@ Public Class Form1
         Dim filename As String
         For Each filepath In My.Computer.FileSystem.GetFiles(secrootnow)
             filename = My.Computer.FileSystem.GetName(filepath)
-            If Strings.Left(filename, 2) = "RJ" Then
-                ListBox1.Items.Add(Strings.Left(filename, InStr(filename, ".") - 1))
+            If rjReg.IsMatch(input:=filename) = True Then
+                ListBox1.Items.Add(filename)
             End If
         Next
     End Sub
